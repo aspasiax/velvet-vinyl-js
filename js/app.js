@@ -1,5 +1,6 @@
 const songForm = document.getElementById("song-form");
 const playlistContainer = document.getElementById("playlist-container");
+const searchInput = document.getElementById("search-input");
 
 songForm.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -43,4 +44,19 @@ songForm.addEventListener("submit", function (event) {
     playlistContainer.appendChild(songCard);
 
     songForm.reset();
+});
+
+searchInput.addEventListener("input", function () {
+    const searchTerm = searchInput.value.toLowerCase();
+    const songCards = document.querySelectorAll(".song-card");
+
+    songCards.forEach(function (card) {
+        const songText = card.textContent.toLowerCase();
+
+        if (songText.includes(searchTerm)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
 });
