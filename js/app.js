@@ -6,6 +6,7 @@ const favoriteSongsElement = document.getElementById("favorite-songs");
 const popularGenreElement = document.getElementById("popular-genre");
 const genreFilter = document.getElementById("genre-filter");
 const sortFilter = document.getElementById("sort-filter");
+const favoriteFilter = document.getElementById("favorite-filter");
 
 let songs = [];
 loadSongs();
@@ -176,7 +177,11 @@ function filterSongs() {
             selectedGenre === "All" ||
             song.genre === selectedGenre;
 
-        return matchesSearch && matchesGenre;
+        const matchesFavorite =
+            favoriteFilter.value === "all" ||
+            song.favorite;
+
+        return matchesSearch && matchesGenre && matchesFavorite;
     });
 
     filteredSongs.sort(function (a, b) {
@@ -209,3 +214,5 @@ searchInput.addEventListener("input", filterSongs);
 genreFilter.addEventListener("change", filterSongs);
 
 sortFilter.addEventListener("change", filterSongs);
+
+favoriteFilter.addEventListener("change", filterSongs);
