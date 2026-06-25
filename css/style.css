@@ -97,3 +97,18 @@ section {
     padding: 1rem;
     border-radius: 16px;
 }
+
+.delete-btn {
+    margin-top: 1rem;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #ff6b6b;
+    color: white;
+    font-weight: bold;
+}
+
+.delete-btn:hover {
+    background-color: #ff5252;
+}

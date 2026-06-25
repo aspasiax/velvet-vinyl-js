@@ -15,7 +15,17 @@ songForm.addEventListener("submit", function (event) {
         <h3>${title}</h3>
         <p><strong>Artist:</strong> ${artist}</p>
         <p><strong>Genre:</strong> ${genre}</p>
+
+        <button class="delete-btn">
+            Delete
+        </button>
     `;
+
+    const deleteButton = songCard.querySelector(".delete-btn");
+
+    deleteButton.addEventListener("click", function () {
+        songCard.remove();
+    });
 
     playlistContainer.appendChild(songCard);
 
