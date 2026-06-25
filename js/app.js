@@ -3,6 +3,7 @@ const playlistContainer = document.getElementById("playlist-container");
 const searchInput = document.getElementById("search-input");
 
 let songs = [];
+loadSongs();
 
 function renderSongs(songList) {
     playlistContainer.innerHTML = "";
@@ -54,6 +55,8 @@ function addSong(title, artist, genre) {
     };
 
     songs.push(newSong);
+
+    saveSongs();
     renderSongs(songs);
 }
 
@@ -62,6 +65,7 @@ function deleteSong(id) {
         return song.id !== id;
     });
 
+    saveSongs();
     renderSongs(songs);
 }
 
@@ -77,7 +81,21 @@ function toggleFavorite(id) {
         return song;
     });
 
+    saveSongs();
     renderSongs(songs);
+}
+
+function saveSongs() {
+    localStorage.setItem("songs", JSON.stringify(songs));
+}
+
+function loadSongs() {
+    const storedSongs = localStorage.getItem("songs");
+
+    if (storedSongs) {
+        songs = JSON.parse(storedSongs);
+        renderSongs(songs);
+    }
 }
 
 songForm.addEventListener("submit", function (event) {
