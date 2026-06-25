@@ -4,6 +4,7 @@ const searchInput = document.getElementById("search-input");
 const totalSongsElement = document.getElementById("total-songs");
 const favoriteSongsElement = document.getElementById("favorite-songs");
 const popularGenreElement = document.getElementById("popular-genre");
+const genreFilter = document.getElementById("genre-filter");
 
 let songs = [];
 loadSongs();
@@ -161,6 +162,25 @@ function loadSongs() {
     }
 }
 
+function filterSongs() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedGenre = genreFilter.value;
+
+    let filteredSongs = songs.filter(function (song) {
+        const matchesSearch =
+            song.title.toLowerCase().includes(searchTerm) ||
+            song.artist.toLowerCase().includes(searchTerm);
+
+        const matchesGenre =
+            selectedGenre === "All" ||
+            song.genre === selectedGenre;
+
+        return matchesSearch && matchesGenre;
+    });
+
+    renderSongs(filteredSongs);
+}
+
 songForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -173,15 +193,6 @@ songForm.addEventListener("submit", function (event) {
     songForm.reset();
 });
 
-searchInput.addEventListener("input", function () {
-    const searchTerm = searchInput.value.toLowerCase();
+searchInput.addEventListener("input", filterSongs);
 
-    const filteredSongs = songs.filter(function (song) {
-        return (
-            song.title.toLowerCase().includes(searchTerm) ||
-            song.artist.toLowerCase().includes(searchTerm)
-        );
-    });
-
-    renderSongs(filteredSongs);
-});
+genreFilter.addEventListener("change", filterSongs);
