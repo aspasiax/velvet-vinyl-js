@@ -82,7 +82,8 @@ section {
     gap: 1rem;
 }
 
-#song-form input {
+#song-form input,
+#song-form select {
     width: 100%;
     padding: 0.9rem 1rem;
     border: none;
