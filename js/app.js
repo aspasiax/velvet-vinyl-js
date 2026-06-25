@@ -5,6 +5,7 @@ const totalSongsElement = document.getElementById("total-songs");
 const favoriteSongsElement = document.getElementById("favorite-songs");
 const popularGenreElement = document.getElementById("popular-genre");
 const genreFilter = document.getElementById("genre-filter");
+const sortFilter = document.getElementById("sort-filter");
 
 let songs = [];
 loadSongs();
@@ -178,6 +179,16 @@ function filterSongs() {
         return matchesSearch && matchesGenre;
     });
 
+    filteredSongs.sort(function (a, b) {
+
+        if (sortFilter.value === "az") {
+            return a.title.localeCompare(b.title);
+        }
+
+        return b.title.localeCompare(a.title);
+
+    });
+
     renderSongs(filteredSongs);
 }
 
@@ -196,3 +207,5 @@ songForm.addEventListener("submit", function (event) {
 searchInput.addEventListener("input", filterSongs);
 
 genreFilter.addEventListener("change", filterSongs);
+
+sortFilter.addEventListener("change", filterSongs);
