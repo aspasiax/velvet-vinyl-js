@@ -3,6 +3,7 @@ const playlistContainer = document.getElementById("playlist-container");
 const searchInput = document.getElementById("search-input");
 const totalSongsElement = document.getElementById("total-songs");
 const favoriteSongsElement = document.getElementById("favorite-songs");
+const popularGenreElement = document.getElementById("popular-genre");
 
 let songs = [];
 loadSongs();
@@ -15,6 +16,29 @@ function updateStats() {
     });
 
     favoriteSongsElement.textContent = favoriteSongs.length;
+
+    if (songs.length === 0) {
+        popularGenreElement.textContent = "-";
+        return;
+    }
+
+    const genreCounts = {};
+
+    songs.forEach(function (song) {
+        genreCounts[song.genre] = (genreCounts[song.genre] || 0) + 1;
+    });
+
+    let topGenre = "";
+    let maxCount = 0;
+
+    for (let genre in genreCounts) {
+        if (genreCounts[genre] > maxCount) {
+            topGenre = genre;
+            maxCount = genreCounts[genre];
+        }
+    }
+
+    popularGenreElement.textContent = topGenre;
 }
 
 function renderSongs(songList) {
@@ -41,15 +65,28 @@ function renderSongs(songList) {
         }
 
         songCard.innerHTML = `
-            <h3>${song.title}</h3>
-            <p><strong>Artist:</strong> ${song.artist}</p>
-            <p><strong>Genre:</strong> ${song.genre}</p>
+            <div class="song-info">
+
+                <h3>${song.title}</h3>
+
+                <p class="artist-name">
+                    🎤 ${song.artist}
+                </p>
+
+                <span class="genre-badge">
+                    ${song.genre}
+                </span>
+
+            </div>
 
             <div class="card-actions">
                 <button class="favorite-btn">
                     ${song.favorite ? "❤️ Favorite" : "🤍 Favorite"}
                 </button>
-                <button class="delete-btn">Delete</button>
+
+                <button class="delete-btn">
+                    Delete
+                </button>
             </div>
         `;
 
