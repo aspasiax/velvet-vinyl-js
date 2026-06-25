@@ -1,12 +1,36 @@
 const songForm = document.getElementById("song-form");
 const playlistContainer = document.getElementById("playlist-container");
 const searchInput = document.getElementById("search-input");
+const totalSongsElement = document.getElementById("total-songs");
+const favoriteSongsElement = document.getElementById("favorite-songs");
 
 let songs = [];
 loadSongs();
 
+function updateStats() {
+    totalSongsElement.textContent = songs.length;
+
+    const favoriteSongs = songs.filter(function (song) {
+        return song.favorite;
+    });
+
+    favoriteSongsElement.textContent = favoriteSongs.length;
+}
+
 function renderSongs(songList) {
     playlistContainer.innerHTML = "";
+
+    if (songList.length === 0) {
+        playlistContainer.innerHTML = `
+            <div class="empty-state">
+                <h3>🎵 No songs in your playlist yet</h3>
+                <p>Start building your collection by adding your first song.</p>
+            </div>
+        `;
+
+        updateStats();
+        return;
+    }
 
     songList.forEach(function (song) {
         const songCard = document.createElement("div");
@@ -43,6 +67,8 @@ function renderSongs(songList) {
 
         playlistContainer.appendChild(songCard);
     });
+
+    updateStats();
 }
 
 function addSong(title, artist, genre) {
