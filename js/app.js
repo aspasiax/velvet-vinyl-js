@@ -16,10 +16,23 @@ songForm.addEventListener("submit", function (event) {
         <p><strong>Artist:</strong> ${artist}</p>
         <p><strong>Genre:</strong> ${genre}</p>
 
-        <button class="delete-btn">
-            Delete
-        </button>
+        <div class="card-actions">
+            <button class="favorite-btn">🤍 Favorite</button>
+            <button class="delete-btn">Delete</button>
+        </div>
     `;
+
+    const favoriteButton = songCard.querySelector(".favorite-btn");
+
+    favoriteButton.addEventListener("click", function () {
+        songCard.classList.toggle("favorite");
+
+        if (songCard.classList.contains("favorite")) {
+            favoriteButton.textContent = "❤️ Favorite";
+        } else {
+            favoriteButton.textContent = "🤍 Favorite";
+        }
+    });
 
     const deleteButton = songCard.querySelector(".delete-btn");
 
