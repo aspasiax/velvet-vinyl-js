@@ -5,15 +5,95 @@
 }
 
 body {
+    min-height: 100vh;
     font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #f7f2ff;
     padding: 2rem;
 }
 
 header {
+    max-width: 900px;
+    margin: 0 auto 2rem;
     text-align: center;
-    margin-bottom: 2rem;
+    padding: 3rem 1rem;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+}
+
+header p {
+    font-size: 1.1rem;
+    color: #e4d8f8;
+}
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 section {
     margin-bottom: 2rem;
+}
+
+.search-section input,
+#song-form input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-section input {
+    background-color: #ffffff;
+    color: #1f1c2c;
+}
+
+.form-section,
+.playlist-section {
+    background: rgba(255, 255, 255, 0.12);
+    padding: 1.5rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.form-section h2,
+.playlist-section h2 {
+    margin-bottom: 1rem;
+}
+
+#song-form {
+    display: grid;
+    gap: 1rem;
+}
+
+#song-form button {
+    padding: 0.9rem 1rem;
+    border: none;
+    border-radius: 12px;
+    background-color: #f4c2c2;
+    color: #1f1c2c;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#song-form button:hover {
+    background-color: #ffd6d6;
+}
+
+#playlist-container {
+    display: grid;
+    gap: 1rem;
+}
+
+.song-card {
+    background: #ffffff;
+    color: #1f1c2c;
+    padding: 1rem;
+    border-radius: 16px;
 }
