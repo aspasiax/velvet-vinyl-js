@@ -11,6 +11,7 @@ const popularGenreElement = document.getElementById("popular-genre");
 const genreFilter = document.getElementById("genre-filter");
 const sortFilter = document.getElementById("sort-filter");
 const favoriteFilter = document.getElementById("favorite-filter");
+const clearPlaylistButton = document.getElementById("clear-playlist-btn");
 
 
 /* Application State */
@@ -165,6 +166,18 @@ function toggleFavorite(id) {
     filterSongs();
 }
 
+function clearPlaylist() {
+    const confirmClear = confirm("Are you sure you want to delete all songs?");
+
+    if (!confirmClear) {
+        return;
+    }
+
+    songs = [];
+
+    saveSongs();
+    filterSongs();
+}
 
 /* Local Storage */
 
@@ -235,3 +248,4 @@ searchInput.addEventListener("input", filterSongs);
 genreFilter.addEventListener("change", filterSongs);
 sortFilter.addEventListener("change", filterSongs);
 favoriteFilter.addEventListener("change", filterSongs);
+clearPlaylistButton.addEventListener("click", clearPlaylist);
