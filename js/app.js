@@ -1,15 +1,26 @@
+/* DOM Elements */
+
 const songForm = document.getElementById("song-form");
 const playlistContainer = document.getElementById("playlist-container");
 const searchInput = document.getElementById("search-input");
+
 const totalSongsElement = document.getElementById("total-songs");
 const favoriteSongsElement = document.getElementById("favorite-songs");
 const popularGenreElement = document.getElementById("popular-genre");
+
 const genreFilter = document.getElementById("genre-filter");
 const sortFilter = document.getElementById("sort-filter");
 const favoriteFilter = document.getElementById("favorite-filter");
 
+
+/* Application State */
+
 let songs = [];
+
 loadSongs();
+
+
+/* Statistics */
 
 function updateStats() {
     totalSongsElement.textContent = songs.length;
@@ -44,6 +55,9 @@ function updateStats() {
     popularGenreElement.textContent = topGenre;
 }
 
+
+/* Render Songs */
+
 function renderSongs(songList) {
     playlistContainer.innerHTML = "";
 
@@ -69,7 +83,6 @@ function renderSongs(songList) {
 
         songCard.innerHTML = `
             <div class="song-info">
-
                 <h3>${song.title}</h3>
 
                 <p class="artist-name">
@@ -79,7 +92,6 @@ function renderSongs(songList) {
                 <span class="genre-badge">
                     ${song.genre}
                 </span>
-
             </div>
 
             <div class="card-actions">
@@ -94,12 +106,11 @@ function renderSongs(songList) {
         `;
 
         const favoriteButton = songCard.querySelector(".favorite-btn");
+        const deleteButton = songCard.querySelector(".delete-btn");
 
         favoriteButton.addEventListener("click", function () {
             toggleFavorite(song.id);
         });
-
-        const deleteButton = songCard.querySelector(".delete-btn");
 
         deleteButton.addEventListener("click", function () {
             deleteSong(song.id);
@@ -110,6 +121,9 @@ function renderSongs(songList) {
 
     updateStats();
 }
+
+
+/* Song Actions */
 
 function addSong(title, artist, genre) {
     const newSong = {
@@ -123,7 +137,7 @@ function addSong(title, artist, genre) {
     songs.push(newSong);
 
     saveSongs();
-    renderSongs(songs);
+    filterSongs();
 }
 
 function deleteSong(id) {
@@ -132,7 +146,7 @@ function deleteSong(id) {
     });
 
     saveSongs();
-    renderSongs(songs);
+    filterSongs();
 }
 
 function toggleFavorite(id) {
@@ -148,8 +162,11 @@ function toggleFavorite(id) {
     });
 
     saveSongs();
-    renderSongs(songs);
+    filterSongs();
 }
+
+
+/* Local Storage */
 
 function saveSongs() {
     localStorage.setItem("songs", JSON.stringify(songs));
@@ -160,9 +177,13 @@ function loadSongs() {
 
     if (storedSongs) {
         songs = JSON.parse(storedSongs);
-        renderSongs(songs);
     }
+
+    renderSongs(songs);
 }
+
+
+/* Filtering and Sorting */
 
 function filterSongs() {
     const searchTerm = searchInput.value.toLowerCase();
@@ -185,17 +206,18 @@ function filterSongs() {
     });
 
     filteredSongs.sort(function (a, b) {
-
         if (sortFilter.value === "az") {
             return a.title.localeCompare(b.title);
         }
 
         return b.title.localeCompare(a.title);
-
     });
 
     renderSongs(filteredSongs);
 }
+
+
+/* Event Listeners */
 
 songForm.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -210,9 +232,6 @@ songForm.addEventListener("submit", function (event) {
 });
 
 searchInput.addEventListener("input", filterSongs);
-
 genreFilter.addEventListener("change", filterSongs);
-
 sortFilter.addEventListener("change", filterSongs);
-
 favoriteFilter.addEventListener("change", filterSongs);
