@@ -108,41 +108,48 @@ section {
 }
 
 
-/* Playlist */
+/* Statistics */
 
-#playlist-container {
+.stats-section {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-.song-card {
-    background: #ffffff;
-    color: #1f1c2c;
+.stat-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
     padding: 1.5rem;
-    border: 2px solid transparent;
-    border-radius: 18px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-align: center;
 }
 
-.song-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
-    border-color: #f4c2c2;
+.stat-card h3 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
 }
 
-.song-card.favorite {
-    border: 3px solid #f4c2c2;
+.stat-card p {
+    color: #e4d8f8;
 }
 
-.genre-badge {
-    display: inline-block;
-    margin-top: 0.75rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background-color: #efe7ff;
-    color: #7d68bc;
-    font-size: 0.85rem;
-    font-weight: 600;
+
+/* Playlist Controls */
+
+.playlist-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.playlist-controls select {
+    width: 250px;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
 }
 
 .clear-btn {
@@ -158,6 +165,55 @@ section {
 
 .clear-btn:hover {
     background-color: #ff5252;
+}
+
+
+/* Playlist */
+
+#playlist-container {
+    display: grid;
+    gap: 1rem;
+}
+
+.song-card {
+    background: #ffffff;
+    color: #1f1c2c;
+    padding: 1.5rem;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    animation: fadeInUp 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.song-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    border-color: #f4c2c2;
+}
+
+.song-card.favorite {
+    border: 3px solid #f4c2c2;
+}
+
+.song-info h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.artist-name {
+    font-size: 1rem;
+    color: #555;
+}
+
+.genre-badge {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background-color: #efe7ff;
+    color: #7d68bc;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
 
@@ -195,6 +251,15 @@ section {
     background-color: #ffd6d6;
 }
 
+.edit-btn {
+    background-color: #928dab;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #7f789f;
+}
+
 .delete-btn {
     background-color: #ff6b6b;
     color: white;
@@ -202,42 +267,6 @@ section {
 
 .delete-btn:hover {
     background-color: #ff5252;
-}
-
-.song-info h3 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-}
-
-.artist-name {
-    font-size: 1rem;
-    color: #555;
-}
-
-/* Statistics */
-
-.stats-section {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.stat-card {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 1.5rem;
-    text-align: center;
-}
-
-.stat-card h3 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.stat-card p {
-    color: #e4d8f8;
 }
 
 
@@ -274,10 +303,6 @@ section {
     }
 }
 
-.song-card {
-    animation: fadeInUp 0.3s ease;
-}
-
 
 /* Responsive Design */
 
@@ -299,6 +324,15 @@ section {
         grid-template-columns: 1fr;
     }
 
+    .playlist-controls {
+        flex-direction: column;
+    }
+
+    .playlist-controls select,
+    .clear-btn {
+        width: 100%;
+    }
+
     .card-actions {
         flex-direction: column;
     }
@@ -306,22 +340,4 @@ section {
     .card-actions button {
         width: 100%;
     }
-}
-
-
-/* Playlist Controls */
-
-.playlist-controls {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.playlist-controls select {
-    width: 250px;
-    padding: 0.8rem 1rem;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    outline: none;
 }

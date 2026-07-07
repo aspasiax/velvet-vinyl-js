@@ -100,6 +100,10 @@ function renderSongs(songList) {
                     ${song.favorite ? "❤️ Favorite" : "🤍 Favorite"}
                 </button>
 
+                <button class="edit-btn">
+                    Edit
+                </button>
+
                 <button class="delete-btn">
                     Delete
                 </button>
