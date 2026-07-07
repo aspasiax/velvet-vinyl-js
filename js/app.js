@@ -13,10 +13,17 @@ const sortFilter = document.getElementById("sort-filter");
 const favoriteFilter = document.getElementById("favorite-filter");
 const clearPlaylistButton = document.getElementById("clear-playlist-btn");
 
+const titleInput = document.getElementById("title");
+const artistInput = document.getElementById("artist");
+const genreInput = document.getElementById("genre");
+const submitButton = songForm.querySelector("button");
+
 
 /* Application State */
 
 let songs = [];
+
+let editingSongId = null;
 
 loadSongs();
 
@@ -107,11 +114,13 @@ function renderSongs(songList) {
                 <button class="delete-btn">
                     Delete
                 </button>
+
             </div>
         `;
 
         const favoriteButton = songCard.querySelector(".favorite-btn");
         const deleteButton = songCard.querySelector(".delete-btn");
+        const editButton = songCard.querySelector(".edit-btn");
 
         favoriteButton.addEventListener("click", function () {
             toggleFavorite(song.id);
@@ -119,6 +128,10 @@ function renderSongs(songList) {
 
         deleteButton.addEventListener("click", function () {
             deleteSong(song.id);
+        });
+
+        editButton.addEventListener("click", function () {
+            startEditSong(song.id);
         });
 
         playlistContainer.appendChild(songCard);
@@ -183,6 +196,28 @@ function clearPlaylist() {
     filterSongs();
 }
 
+function startEditSong(id) {
+    const songToEdit = songs.find(function (song) {
+        return song.id === id;
+    });
+
+    if (!songToEdit) {
+        return;
+    }
+
+    titleInput.value = songToEdit.title;
+    artistInput.value = songToEdit.artist;
+    genreInput.value = songToEdit.genre;
+
+    editingSongId = id;
+    submitButton.textContent = "Update Song";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
 /* Local Storage */
 
 function saveSongs() {
@@ -239,9 +274,9 @@ function filterSongs() {
 songForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const title = document.getElementById("title").value;
-    const artist = document.getElementById("artist").value;
-    const genre = document.getElementById("genre").value;
+    const title = titleInput.value;
+    const artist = artistInput.value;
+    const genre = genreInput.value;
 
     addSong(title, artist, genre);
 
