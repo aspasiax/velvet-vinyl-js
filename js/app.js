@@ -218,6 +218,27 @@ function startEditSong(id) {
     });
 }
 
+function updateSong(id, title, artist, genre) {
+    songs = songs.map(function (song) {
+        if (song.id === id) {
+            return {
+                ...song,
+                title: title,
+                artist: artist,
+                genre: genre
+            };
+        }
+
+        return song;
+    });
+
+    editingSongId = null;
+    submitButton.textContent = "Add Song";
+
+    saveSongs();
+    filterSongs();
+}
+
 /* Local Storage */
 
 function saveSongs() {
@@ -278,7 +299,11 @@ songForm.addEventListener("submit", function (event) {
     const artist = artistInput.value;
     const genre = genreInput.value;
 
-    addSong(title, artist, genre);
+    if (editingSongId) {
+        updateSong(editingSongId, title, artist, genre);
+    } else {
+        addSong(title, artist, genre);
+    }
 
     songForm.reset();
 });
