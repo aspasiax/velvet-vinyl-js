@@ -17,14 +17,20 @@ const titleInput = document.getElementById("title");
 const artistInput = document.getElementById("artist");
 const genreInput = document.getElementById("genre");
 const submitButton = songForm.querySelector("button");
-
 const cancelEditButton = document.getElementById("cancel-edit-btn");
+
+const confirmationModal = document.getElementById("confirmation-modal");
+const modalTitle = document.getElementById("modal-title");
+const modalMessage = document.getElementById("modal-message");
+const modalCancelButton = document.getElementById("modal-cancel-btn");
+const modalConfirmButton = document.getElementById("modal-confirm-btn");
 
 /* Application State */
 
 let songs = [];
 
 let editingSongId = null;
+let songIdToDelete = null;
 
 loadSongs();
 
@@ -128,7 +134,7 @@ function renderSongs(songList) {
         });
 
         deleteButton.addEventListener("click", function () {
-            deleteSong(song.id);
+            openDeleteModal(song.id);
         });
 
         editButton.addEventListener("click", function () {
@@ -253,6 +259,29 @@ function cancelEdit() {
     cancelEditButton.hidden = true;
 }
 
+function openDeleteModal(id) {
+    const songToDelete = songs.find(function (song) {
+        return song.id === id;
+    });
+
+    if (!songToDelete) {
+        return;
+    }
+
+    songIdToDelete = id;
+
+    modalTitle.textContent = "Delete Song";
+    modalMessage.textContent = `Are you sure you want to delete "${songToDelete.title}"?`;
+    modalConfirmButton.textContent = "Delete";
+
+    confirmationModal.classList.remove("hidden");
+}
+
+function closeModal() {
+    songIdToDelete = null;
+    confirmationModal.classList.add("hidden");
+}
+
 /* Local Storage */
 
 function saveSongs() {
@@ -328,3 +357,11 @@ sortFilter.addEventListener("change", filterSongs);
 favoriteFilter.addEventListener("change", filterSongs);
 clearPlaylistButton.addEventListener("click", clearPlaylist);
 cancelEditButton.addEventListener("click", cancelEdit);
+modalCancelButton.addEventListener("click", closeModal);
+
+modalConfirmButton.addEventListener("click", function () {
+    if (songIdToDelete) {
+        deleteSong(songIdToDelete);
+        closeModal();
+    }
+});
