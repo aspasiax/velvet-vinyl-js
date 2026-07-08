@@ -12,12 +12,13 @@ const genreFilter = document.getElementById("genre-filter");
 const sortFilter = document.getElementById("sort-filter");
 const favoriteFilter = document.getElementById("favorite-filter");
 const clearPlaylistButton = document.getElementById("clear-playlist-btn");
+const cancelEditButton = document.getElementById("cancel-edit-btn");
+const formError = document.getElementById("form-error");
 
 const titleInput = document.getElementById("title");
 const artistInput = document.getElementById("artist");
 const genreInput = document.getElementById("genre");
 const submitButton = songForm.querySelector("button");
-const cancelEditButton = document.getElementById("cancel-edit-btn");
 
 const confirmationModal = document.getElementById("confirmation-modal");
 const modalTitle = document.getElementById("modal-title");
@@ -259,6 +260,8 @@ function cancelEdit() {
     submitButton.textContent = "Add Song";
 
     cancelEditButton.hidden = true;
+
+    formError.textContent = "";
 }
 
 function openDeleteModal(id) {
@@ -284,6 +287,16 @@ function closeModal() {
     songIdToDelete = null;
     pendingAction = null;
     confirmationModal.classList.add("hidden");
+}
+
+function validateForm(title, artist, genre) {
+    if (!title || !artist || !genre) {
+        formError.textContent = "Please fill in all fields.";
+        return false;
+    }
+
+    formError.textContent = "";
+    return true;
 }
 
 /* Local Storage */
@@ -346,6 +359,10 @@ songForm.addEventListener("submit", function (event) {
     const artist = artistInput.value;
     const genre = genreInput.value;
 
+    if (!validateForm(title, artist, genre)) {
+    return;
+}
+
     if (editingSongId) {
         updateSong(editingSongId, title, artist, genre);
     } else {
@@ -364,15 +381,8 @@ cancelEditButton.addEventListener("click", cancelEdit);
 modalCancelButton.addEventListener("click", closeModal);
 
 modalConfirmButton.addEventListener("click", function () {
-    if (pendingAction === "delete" && songIdToDelete) {
+    if (songIdToDelete) {
         deleteSong(songIdToDelete);
+        closeModal();
     }
-
-    if (pendingAction === "clear") {
-        songs = [];
-        saveSongs();
-        filterSongs();
-    }
-
-    closeModal();
 });

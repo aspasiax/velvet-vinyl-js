@@ -123,6 +123,12 @@ section {
     background-color: #5a6268;
 }
 
+.form-error {
+    color: #ffd6d6;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
 
 /* Statistics */
 
