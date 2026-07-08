@@ -307,6 +307,67 @@ section {
     color: #817f7f;
 }
 
+/* Modal */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 28, 44, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    z-index: 1000;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    color: #1f1c2c;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    animation: fadeInUp 0.25s ease;
+}
+
+.modal h2 {
+    margin-bottom: 1rem;
+}
+
+.modal p {
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.modal-actions button {
+    width: 130px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-cancel-btn {
+    background-color: #e6e6e6;
+    color: #1f1c2c;
+}
+
+.modal-confirm-btn {
+    background-color: #ff6b6b;
+    color: white;
+}
 
 /* Animations */
 
