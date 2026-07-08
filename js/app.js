@@ -18,6 +18,7 @@ const artistInput = document.getElementById("artist");
 const genreInput = document.getElementById("genre");
 const submitButton = songForm.querySelector("button");
 
+const cancelEditButton = document.getElementById("cancel-edit-btn");
 
 /* Application State */
 
@@ -216,6 +217,8 @@ function startEditSong(id) {
         top: 0,
         behavior: "smooth"
     });
+
+    cancelEditButton.hidden = false;
 }
 
 function updateSong(id, title, artist, genre) {
@@ -234,9 +237,20 @@ function updateSong(id, title, artist, genre) {
 
     editingSongId = null;
     submitButton.textContent = "Add Song";
+    cancelEditButton.hidden = true;
 
     saveSongs();
     filterSongs();
+}
+
+function cancelEdit() {
+    editingSongId = null;
+
+    songForm.reset();
+
+    submitButton.textContent = "Add Song";
+
+    cancelEditButton.hidden = true;
 }
 
 /* Local Storage */
@@ -313,3 +327,4 @@ genreFilter.addEventListener("change", filterSongs);
 sortFilter.addEventListener("change", filterSongs);
 favoriteFilter.addEventListener("change", filterSongs);
 clearPlaylistButton.addEventListener("click", clearPlaylist);
+cancelEditButton.addEventListener("click", cancelEdit);
