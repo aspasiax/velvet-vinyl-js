@@ -31,6 +31,7 @@ let songs = [];
 
 let editingSongId = null;
 let songIdToDelete = null;
+let pendingAction = null;
 
 loadSongs();
 
@@ -191,16 +192,17 @@ function toggleFavorite(id) {
 }
 
 function clearPlaylist() {
-    const confirmClear = confirm("Are you sure you want to delete all songs?");
-
-    if (!confirmClear) {
+    if (songs.length === 0) {
         return;
     }
 
-    songs = [];
+    pendingAction = "clear";
 
-    saveSongs();
-    filterSongs();
+    modalTitle.textContent = "Clear Playlist";
+    modalMessage.textContent = "Are you sure you want to delete all songs from your playlist?";
+    modalConfirmButton.textContent = "Clear";
+
+    confirmationModal.classList.remove("hidden");
 }
 
 function startEditSong(id) {
@@ -274,11 +276,13 @@ function openDeleteModal(id) {
     modalMessage.textContent = `Are you sure you want to delete "${songToDelete.title}"?`;
     modalConfirmButton.textContent = "Delete";
 
+    pendingAction = "delete";
     confirmationModal.classList.remove("hidden");
 }
 
 function closeModal() {
     songIdToDelete = null;
+    pendingAction = null;
     confirmationModal.classList.add("hidden");
 }
 
@@ -360,8 +364,15 @@ cancelEditButton.addEventListener("click", cancelEdit);
 modalCancelButton.addEventListener("click", closeModal);
 
 modalConfirmButton.addEventListener("click", function () {
-    if (songIdToDelete) {
+    if (pendingAction === "delete" && songIdToDelete) {
         deleteSong(songIdToDelete);
-        closeModal();
     }
+
+    if (pendingAction === "clear") {
+        songs = [];
+        saveSongs();
+        filterSongs();
+    }
+
+    closeModal();
 });
