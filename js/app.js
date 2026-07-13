@@ -26,6 +26,8 @@ const modalMessage = document.getElementById("modal-message");
 const modalCancelButton = document.getElementById("modal-cancel-btn");
 const modalConfirmButton = document.getElementById("modal-confirm-btn");
 
+const toast = document.getElementById("toast");
+
 /* Application State */
 
 let songs = [];
@@ -349,6 +351,16 @@ function filterSongs() {
     renderSongs(filteredSongs);
 }
 
+function showToast(message) {
+
+    toast.textContent = message;
+
+    toast.classList.remove("hidden");
+
+    setTimeout(function () {
+        toast.classList.add("hidden");
+    }, 2000);
+}
 
 /* Event Listeners */
 

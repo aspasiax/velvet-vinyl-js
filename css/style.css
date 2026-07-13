@@ -375,6 +375,29 @@ section {
     color: white;
 }
 
+/* Toast */
+
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: #1f1c2c;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    font-weight: 600;
+    z-index: 1100;
+
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.toast.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
 /* Animations */
 
 @keyframes fadeInUp {
