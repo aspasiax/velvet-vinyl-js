@@ -167,6 +167,8 @@ function addSong(title, artist, genre) {
 
     saveSongs();
     filterSongs();
+
+    showToast("✅ Song added successfully!");
 }
 
 function deleteSong(id) {
@@ -176,15 +178,23 @@ function deleteSong(id) {
 
     saveSongs();
     filterSongs();
+
+    showToast("🗑️ Song deleted successfully!");
 }
 
 function toggleFavorite(id) {
+    let isFavorite = false;
+
     songs = songs.map(function (song) {
         if (song.id === id) {
-            return {
+            const updatedSong = {
                 ...song,
                 favorite: !song.favorite
             };
+
+            isFavorite = updatedSong.favorite;
+
+            return updatedSong;
         }
 
         return song;
@@ -192,6 +202,12 @@ function toggleFavorite(id) {
 
     saveSongs();
     filterSongs();
+
+    if (isFavorite) {
+        showToast("❤️ Added to favorites!");
+    } else {
+        showToast("🤍 Removed from favorites!");
+    }
 }
 
 function clearPlaylist() {
@@ -252,6 +268,8 @@ function updateSong(id, title, artist, genre) {
 
     saveSongs();
     filterSongs();
+
+    showToast("✏️ Song updated successfully!");
 }
 
 function cancelEdit() {
@@ -393,8 +411,18 @@ cancelEditButton.addEventListener("click", cancelEdit);
 modalCancelButton.addEventListener("click", closeModal);
 
 modalConfirmButton.addEventListener("click", function () {
-    if (songIdToDelete) {
+
+    if (pendingAction === "delete" && songIdToDelete) {
         deleteSong(songIdToDelete);
-        closeModal();
     }
+
+    if (pendingAction === "clear") {
+        songs = [];
+        saveSongs();
+        filterSongs();
+
+        showToast("🎵 Playlist cleared!");
+    }
+
+    closeModal();
 });
