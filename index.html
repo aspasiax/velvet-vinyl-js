@@ -49,19 +49,57 @@
                     placeholder="Artist"
                 >
 
-                <select id="genre">
-                    <option value="">Select Genre</option>
-                    <option value="Pop">Pop</option>
-                    <option value="Rock">Rock</option>
-                    <option value="Alternative">Alternative</option>
-                    <option value="Indie">Indie</option>
-                    <option value="Hip-Hop">Hip-Hop</option>
-                    <option value="R&B">R&B</option>
-                    <option value="Electronic">Electronic</option>
-                    <option value="Jazz">Jazz</option>
-                    <option value="Classical">Classical</option>
-                    <option value="Other">Other</option>
-                </select>
+                <div class="genre-field">
+    <p class="genre-label">Choose Genre</p>
+
+    <div
+            class="genre-options"
+            role="group"
+            aria-label="Choose song genre"
+        >
+            <button type="button" class="genre-option" data-genre="Pop">
+                Pop
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Rock">
+                Rock
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Alternative">
+                Alternative
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Indie">
+                Indie
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Hip-Hop">
+                Hip-Hop
+            </button>
+
+            <button type="button" class="genre-option" data-genre="R&B">
+                R&amp;B
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Electronic">
+                Electronic
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Jazz">
+                Jazz
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Classical">
+                Classical
+            </button>
+
+            <button type="button" class="genre-option" data-genre="Other">
+                Other
+            </button>
+        </div>
+
+        <input type="hidden" id="genre" value="">
+    </div>
 
                 <p id="form-error" class="form-error"></p>
 

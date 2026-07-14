@@ -94,14 +94,64 @@ h1 i {
     gap: 1rem;
 }
 
-#song-form input,
-#song-form select {
+#song-form input {
     width: 100%;
     padding: 0.9rem 1rem;
     border: none;
     border-radius: 12px;
     font-size: 1rem;
     outline: none;
+}
+
+.genre-field {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.genre-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f7f2ff;
+}
+
+.genre-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+#song-form .genre-option {
+    padding: 0.65rem 1rem;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #4f4668;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+#song-form .genre-option:hover {
+    transform: translateY(-2px);
+    background-color: #efe7ff;
+    border-color: #c4b5fd;
+}
+
+#song-form .genre-option.selected {
+    background-color: #928dab;
+    color: #ffffff;
+    border-color: #d8b4fe;
+    transform: scale(1.04);
+}
+
+#song-form .genre-option:focus-visible {
+    outline: 3px solid #ffd6d6;
+    outline-offset: 3px;
 }
 
 #song-form button {
@@ -475,5 +525,13 @@ h1 i {
 
     .card-actions button {
         width: 100%;
+    }
+
+    .genre-options {
+        gap: 0.5rem;
+    }
+
+    #song-form .genre-option {
+        flex: 1 1 calc(50% - 0.5rem);
     }
 }

@@ -29,7 +29,7 @@ const modalConfirmButton = document.getElementById("modal-confirm-btn");
 
 const toast = document.getElementById("toast");
 const songCounter = document.getElementById("song-counter");
-
+const genreButtons = document.querySelectorAll(".genre-option");
 
 /* Application State */
 
@@ -218,6 +218,28 @@ function renderSongs(songList) {
     updateStats();
 }
 
+/* Genre Selection */
+
+function selectGenre(genre) {
+    genreInput.value = genre;
+
+    genreButtons.forEach(function (button) {
+        const isSelected = button.dataset.genre === genre;
+
+        button.classList.toggle("selected", isSelected);
+        button.setAttribute("aria-pressed", String(isSelected));
+    });
+}
+
+function clearGenreSelection() {
+    genreInput.value = "";
+
+    genreButtons.forEach(function (button) {
+        button.classList.remove("selected");
+        button.setAttribute("aria-pressed", "false");
+    });
+}
+
 
 /* Song Actions */
 
@@ -332,7 +354,7 @@ function startEditSong(id) {
 
     titleInput.value = songToEdit.title;
     artistInput.value = songToEdit.artist;
-    genreInput.value = songToEdit.genre;
+    selectGenre(songToEdit.genre);
 
     editingSongId = id;
 
@@ -380,6 +402,7 @@ function updateSong(id, title, artist, genre) {
 function cancelEdit() {
     resetEditMode();
     songForm.reset();
+    clearGenreSelection();
     formError.textContent = "";
 }
 
@@ -530,6 +553,23 @@ function escapeHtml(value) {
 
 /* Event Listeners */
 
+genreButtons.forEach(function (button) {
+    button.setAttribute("aria-pressed", "false");
+
+    button.addEventListener("click", function () {
+        const selectedGenre = button.dataset.genre;
+
+        selectGenre(selectedGenre);
+
+        /*
+         * Μεταφέρει το focus στο submit button.
+         * Έτσι, μετά την επιλογή genre, το σκέτο Enter
+         * κάνει Add ή Update Song.
+         */
+        submitButton.focus();
+    });
+});
+
 songForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -548,6 +588,7 @@ songForm.addEventListener("submit", function (event) {
     }
 
     songForm.reset();
+    clearGenreSelection();
 });
 
 searchInput.addEventListener("input", filterSongs);
@@ -578,4 +619,34 @@ modalConfirmButton.addEventListener("click", function () {
     }
 
     closeModal();
+});
+
+/* Keyboard Shortcuts */
+
+document.addEventListener("keydown", function (event) {
+    const activeElement = document.activeElement;
+
+    const isTyping =
+        activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA" ||
+        activeElement.tagName === "SELECT";
+
+    if (event.key === "Escape") {
+        if (!confirmationModal.classList.contains("hidden")) {
+            closeModal();
+            return;
+        }
+
+        if (editingSongId !== null) {
+            cancelEdit();
+        }
+
+        return;
+    }
+
+    if (event.key === "/" && !isTyping) {
+        event.preventDefault();
+        searchInput.focus();
+        return;
+    }
 });
