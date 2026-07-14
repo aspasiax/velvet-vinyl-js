@@ -65,6 +65,7 @@ section {
 }
 
 /* Icons */
+
 button i,
 .artist-name i,
 h1 i {
@@ -407,6 +408,19 @@ h1 i {
 .toast.hidden {
     opacity: 0;
     pointer-events: none;
+}
+
+/* Recent Badge */
+
+.recent-badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background-color: #d8b4fe;
+    color: #5b21b6;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 /* Animations */

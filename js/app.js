@@ -141,7 +141,17 @@ function renderSongs(songList) {
 
         songCard.innerHTML = `
             <div class="song-info">
-                <h3>${escapeHtml(song.title)}</h3>
+                <h3>
+                    ${escapeHtml(song.title)}
+
+                    ${
+                        song.isNew
+                            ? `<span class="recent-badge">
+                                    Recently Added
+                            </span>`
+                            : ""
+                    }
+                </h3>
 
                 <p class="artist-name">
                     <i class="fa-solid fa-microphone-lines"></i>
@@ -212,12 +222,18 @@ function renderSongs(songList) {
 /* Song Actions */
 
 function addSong(title, artist, genre) {
+
+    songs.forEach(function (song) {
+        song.isNew = false;
+    });
+
     const newSong = {
         id: Date.now(),
         title: title,
         artist: artist,
         genre: genre,
-        favorite: false
+        favorite: false,
+        isNew: true
     };
 
     songs.push(newSong);
