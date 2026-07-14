@@ -11,6 +11,7 @@ const popularGenreElement = document.getElementById("popular-genre");
 const genreFilter = document.getElementById("genre-filter");
 const sortFilter = document.getElementById("sort-filter");
 const favoriteFilter = document.getElementById("favorite-filter");
+
 const clearPlaylistButton = document.getElementById("clear-playlist-btn");
 const cancelEditButton = document.getElementById("cancel-edit-btn");
 const formError = document.getElementById("form-error");
@@ -18,7 +19,7 @@ const formError = document.getElementById("form-error");
 const titleInput = document.getElementById("title");
 const artistInput = document.getElementById("artist");
 const genreInput = document.getElementById("genre");
-const submitButton = songForm.querySelector("button");
+const submitButton = songForm.querySelector('button[type="submit"]');
 
 const confirmationModal = document.getElementById("confirmation-modal");
 const modalTitle = document.getElementById("modal-title");
@@ -27,14 +28,16 @@ const modalCancelButton = document.getElementById("modal-cancel-btn");
 const modalConfirmButton = document.getElementById("modal-confirm-btn");
 
 const toast = document.getElementById("toast");
+const songCounter = document.getElementById("song-counter");
+
 
 /* Application State */
 
 let songs = [];
-
 let editingSongId = null;
 let songIdToDelete = null;
 let pendingAction = null;
+let toastTimeoutId = null;
 
 loadSongs();
 
@@ -43,6 +46,36 @@ loadSongs();
 
 function updateStats() {
     totalSongsElement.textContent = songs.length;
+
+    if (songs.length === 0) {
+
+        songCounter.innerHTML = `
+            <i class="fa-solid fa-music"></i>
+            Your playlist is empty.
+        `;
+
+    } else if (songs.length === 1) {
+
+        songCounter.innerHTML = `
+            <i class="fa-solid fa-record-vinyl"></i>
+            1 song in your collection.
+        `;
+
+    } else if (songs.length < 10) {
+
+        songCounter.innerHTML = `
+            <i class="fa-solid fa-record-vinyl"></i>
+            ${songs.length} songs in your collection.
+        `;
+
+    } else {
+
+        songCounter.innerHTML = `
+            <i class="fa-solid fa-compact-disc"></i>
+            ${songs.length} songs in your collection.
+        `;
+
+    }
 
     const favoriteSongs = songs.filter(function (song) {
         return song.favorite;
@@ -64,7 +97,7 @@ function updateStats() {
     let topGenre = "";
     let maxCount = 0;
 
-    for (let genre in genreCounts) {
+    for (const genre in genreCounts) {
         if (genreCounts[genre] > maxCount) {
             topGenre = genre;
             maxCount = genreCounts[genre];
@@ -83,8 +116,14 @@ function renderSongs(songList) {
     if (songList.length === 0) {
         playlistContainer.innerHTML = `
             <div class="empty-state">
-                <h3>🎵 No songs in your playlist yet</h3>
-                <p>Start building your collection by adding your first song.</p>
+                <h3>
+                    <i class="fa-solid fa-music"></i>
+                    No songs found
+                </h3>
+
+                <p>
+                    Add a new song or change the active filters.
+                </p>
             </div>
         `;
 
@@ -102,47 +141,65 @@ function renderSongs(songList) {
 
         songCard.innerHTML = `
             <div class="song-info">
-                <h3>${song.title}</h3>
+                <h3>${escapeHtml(song.title)}</h3>
 
                 <p class="artist-name">
-                    🎤 ${song.artist}
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    ${escapeHtml(song.artist)}
                 </p>
 
                 <span class="genre-badge">
-                    ${song.genre}
+                    ${escapeHtml(song.genre)}
                 </span>
             </div>
 
             <div class="card-actions">
-                <button class="favorite-btn">
-                    ${song.favorite ? "❤️ Favorite" : "🤍 Favorite"}
+                <button
+                    type="button"
+                    class="favorite-btn"
+                    aria-label="Toggle favorite status"
+                >
+                    ${
+                        song.favorite
+                            ? '<i class="fa-solid fa-heart"></i> Favorite'
+                            : '<i class="fa-regular fa-heart"></i> Favorite'
+                    }
                 </button>
 
-                <button class="edit-btn">
+                <button
+                    type="button"
+                    class="edit-btn"
+                    aria-label="Edit song"
+                >
+                    <i class="fa-solid fa-pen"></i>
                     Edit
                 </button>
 
-                <button class="delete-btn">
+                <button
+                    type="button"
+                    class="delete-btn"
+                    aria-label="Delete song"
+                >
+                    <i class="fa-solid fa-trash"></i>
                     Delete
                 </button>
-
             </div>
         `;
 
         const favoriteButton = songCard.querySelector(".favorite-btn");
-        const deleteButton = songCard.querySelector(".delete-btn");
         const editButton = songCard.querySelector(".edit-btn");
+        const deleteButton = songCard.querySelector(".delete-btn");
 
         favoriteButton.addEventListener("click", function () {
             toggleFavorite(song.id);
         });
 
-        deleteButton.addEventListener("click", function () {
-            openDeleteModal(song.id);
-        });
-
         editButton.addEventListener("click", function () {
             startEditSong(song.id);
+        });
+
+        deleteButton.addEventListener("click", function () {
+            openDeleteModal(song.id);
         });
 
         playlistContainer.appendChild(songCard);
@@ -168,7 +225,10 @@ function addSong(title, artist, genre) {
     saveSongs();
     filterSongs();
 
-    showToast("✅ Song added successfully!");
+    showToast(`
+        <i class="fa-solid fa-circle-check"></i>
+        Song added successfully!
+    `);
 }
 
 function deleteSong(id) {
@@ -176,10 +236,17 @@ function deleteSong(id) {
         return song.id !== id;
     });
 
+    if (editingSongId === id) {
+        cancelEdit();
+    }
+
     saveSongs();
     filterSongs();
 
-    showToast("🗑️ Song deleted successfully!");
+    showToast(`
+        <i class="fa-solid fa-trash"></i>
+        Song deleted successfully!
+    `);
 }
 
 function toggleFavorite(id) {
@@ -193,7 +260,6 @@ function toggleFavorite(id) {
             };
 
             isFavorite = updatedSong.favorite;
-
             return updatedSong;
         }
 
@@ -204,9 +270,15 @@ function toggleFavorite(id) {
     filterSongs();
 
     if (isFavorite) {
-        showToast("❤️ Added to favorites!");
+        showToast(`
+            <i class="fa-solid fa-heart"></i>
+            Added to favorites!
+        `);
     } else {
-        showToast("🤍 Removed from favorites!");
+        showToast(`
+            <i class="fa-regular fa-heart"></i>
+            Removed from favorites!
+        `);
     }
 }
 
@@ -217,9 +289,18 @@ function clearPlaylist() {
 
     pendingAction = "clear";
 
-    modalTitle.textContent = "Clear Playlist";
-    modalMessage.textContent = "Are you sure you want to delete all songs from your playlist?";
-    modalConfirmButton.textContent = "Clear";
+    modalTitle.innerHTML = `
+        <i class="fa-solid fa-trash-can"></i>
+        Clear Playlist
+    `;
+
+    modalMessage.textContent =
+        "Are you sure you want to delete all songs from your playlist?";
+
+    modalConfirmButton.innerHTML = `
+        <i class="fa-solid fa-trash-can"></i>
+        Clear
+    `;
 
     confirmationModal.classList.remove("hidden");
 }
@@ -238,14 +319,21 @@ function startEditSong(id) {
     genreInput.value = songToEdit.genre;
 
     editingSongId = id;
-    submitButton.textContent = "Update Song";
+
+    submitButton.innerHTML = `
+        <i class="fa-solid fa-floppy-disk"></i>
+        Update Song
+    `;
+
+    cancelEditButton.hidden = false;
+    formError.textContent = "";
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
 
-    cancelEditButton.hidden = false;
+    titleInput.focus();
 }
 
 function updateSong(id, title, artist, genre) {
@@ -262,26 +350,32 @@ function updateSong(id, title, artist, genre) {
         return song;
     });
 
-    editingSongId = null;
-    submitButton.textContent = "Add Song";
-    cancelEditButton.hidden = true;
+    resetEditMode();
 
     saveSongs();
     filterSongs();
 
-    showToast("✏️ Song updated successfully!");
+    showToast(`
+        <i class="fa-solid fa-pen-to-square"></i>
+        Song updated successfully!
+    `);
 }
 
 function cancelEdit() {
+    resetEditMode();
+    songForm.reset();
+    formError.textContent = "";
+}
+
+function resetEditMode() {
     editingSongId = null;
 
-    songForm.reset();
-
-    submitButton.textContent = "Add Song";
+    submitButton.innerHTML = `
+        <i class="fa-solid fa-plus"></i>
+        Add Song
+    `;
 
     cancelEditButton.hidden = true;
-
-    formError.textContent = "";
 }
 
 function openDeleteModal(id) {
@@ -294,20 +388,33 @@ function openDeleteModal(id) {
     }
 
     songIdToDelete = id;
-
-    modalTitle.textContent = "Delete Song";
-    modalMessage.textContent = `Are you sure you want to delete "${songToDelete.title}"?`;
-    modalConfirmButton.textContent = "Delete";
-
     pendingAction = "delete";
+
+    modalTitle.innerHTML = `
+        <i class="fa-solid fa-trash"></i>
+        Delete Song
+    `;
+
+    modalMessage.textContent =
+        `Are you sure you want to delete "${songToDelete.title}"?`;
+
+    modalConfirmButton.innerHTML = `
+        <i class="fa-solid fa-trash"></i>
+        Delete
+    `;
+
     confirmationModal.classList.remove("hidden");
 }
 
 function closeModal() {
     songIdToDelete = null;
     pendingAction = null;
+
     confirmationModal.classList.add("hidden");
 }
+
+
+/* Form Validation */
 
 function validateForm(title, artist, genre) {
     if (!title || !artist || !genre) {
@@ -319,6 +426,7 @@ function validateForm(title, artist, genre) {
     return true;
 }
 
+
 /* Local Storage */
 
 function saveSongs() {
@@ -329,7 +437,12 @@ function loadSongs() {
     const storedSongs = localStorage.getItem("songs");
 
     if (storedSongs) {
-        songs = JSON.parse(storedSongs);
+        try {
+            songs = JSON.parse(storedSongs);
+        } catch (error) {
+            console.error("Unable to load songs from local storage:", error);
+            songs = [];
+        }
     }
 
     renderSongs(songs);
@@ -339,10 +452,10 @@ function loadSongs() {
 /* Filtering and Sorting */
 
 function filterSongs() {
-    const searchTerm = searchInput.value.toLowerCase();
+    const searchTerm = searchInput.value.trim().toLowerCase();
     const selectedGenre = genreFilter.value;
 
-    let filteredSongs = songs.filter(function (song) {
+    const filteredSongs = songs.filter(function (song) {
         const matchesSearch =
             song.title.toLowerCase().includes(searchTerm) ||
             song.artist.toLowerCase().includes(searchTerm);
@@ -369,31 +482,50 @@ function filterSongs() {
     renderSongs(filteredSongs);
 }
 
+
+/* Toast Notifications */
+
 function showToast(message) {
+    if (toastTimeoutId !== null) {
+        clearTimeout(toastTimeoutId);
+    }
 
-    toast.textContent = message;
-
+    toast.innerHTML = message;
     toast.classList.remove("hidden");
 
-    setTimeout(function () {
+    toastTimeoutId = setTimeout(function () {
         toast.classList.add("hidden");
+        toastTimeoutId = null;
     }, 2000);
 }
+
+
+/* Utilities */
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
 
 /* Event Listeners */
 
 songForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const title = titleInput.value;
-    const artist = artistInput.value;
+    const title = titleInput.value.trim();
+    const artist = artistInput.value.trim();
     const genre = genreInput.value;
 
     if (!validateForm(title, artist, genre)) {
-    return;
-}
+        return;
+    }
 
-    if (editingSongId) {
+    if (editingSongId !== null) {
         updateSong(editingSongId, title, artist, genre);
     } else {
         addSong(title, artist, genre);
@@ -406,22 +538,27 @@ searchInput.addEventListener("input", filterSongs);
 genreFilter.addEventListener("change", filterSongs);
 sortFilter.addEventListener("change", filterSongs);
 favoriteFilter.addEventListener("change", filterSongs);
+
 clearPlaylistButton.addEventListener("click", clearPlaylist);
 cancelEditButton.addEventListener("click", cancelEdit);
 modalCancelButton.addEventListener("click", closeModal);
 
 modalConfirmButton.addEventListener("click", function () {
-
-    if (pendingAction === "delete" && songIdToDelete) {
+    if (pendingAction === "delete" && songIdToDelete !== null) {
         deleteSong(songIdToDelete);
     }
 
     if (pendingAction === "clear") {
         songs = [];
+
+        cancelEdit();
         saveSongs();
         filterSongs();
 
-        showToast("🎵 Playlist cleared!");
+        showToast(`
+            <i class="fa-solid fa-trash-can"></i>
+            Playlist cleared successfully!
+        `);
     }
 
     closeModal();
