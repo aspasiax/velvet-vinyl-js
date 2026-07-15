@@ -83,6 +83,8 @@ function updateStats() {
 
     favoriteSongsElement.textContent = favoriteSongs.length;
 
+    updateClearButtonState();
+
     if (songs.length === 0) {
         popularGenreElement.textContent = "-";
         return;
@@ -107,6 +109,11 @@ function updateStats() {
     popularGenreElement.textContent = topGenre;
 }
 
+function updateClearButtonState() {
+    const isPlaylistEmpty = songs.length === 0;
+
+    clearPlaylistButton.disabled = isPlaylistEmpty;
+}
 
 /* Render Songs */
 

@@ -251,6 +251,16 @@ h1 i {
     background-color: #ff5252;
 }
 
+.clear-btn:disabled {
+    background-color: #8f8c99;
+    color: #d8d6df;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.clear-btn:disabled:hover {
+    background-color: #8f8c99;
+}
 
 /* Playlist */
 
