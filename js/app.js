@@ -465,6 +465,21 @@ function validateForm(title, artist, genre) {
     return true;
 }
 
+function songAlreadyExists(title, artist, ignoredSongId = null) {
+    const normalizedTitle = title.trim().toLowerCase();
+    const normalizedArtist = artist.trim().toLowerCase();
+
+    return songs.some(function (song) {
+        const isSameSong =
+            song.title.trim().toLowerCase() === normalizedTitle &&
+            song.artist.trim().toLowerCase() === normalizedArtist;
+
+        const isDifferentSong =
+            ignoredSongId === null || song.id !== ignoredSongId;
+
+        return isSameSong && isDifferentSong;
+    });
+}
 
 /* Local Storage */
 
@@ -578,6 +593,13 @@ songForm.addEventListener("submit", function (event) {
     const genre = genreInput.value;
 
     if (!validateForm(title, artist, genre)) {
+        return;
+    }
+
+    if (songAlreadyExists(title, artist, editingSongId)) {
+        formError.textContent =
+            "This song already exists in your playlist.";
+
         return;
     }
 
